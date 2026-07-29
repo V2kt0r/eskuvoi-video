@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laura &amp; Viktor — Esküvői videó</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #f8f4ec;
+    --ink: #3d3a34;
+    --olive: #4e4f27;
+    --olive-dark: #3b3c1d;
+  }
+  * { box-sizing: border-box; }
+  html, body { min-height: 100%; margin: 0; }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem;
+    background: var(--ivory);
+    color: var(--ink);
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 900px;
+  }
+  .names {
+    font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    font-size: 2.6rem;
+    line-height: 1.1;
+    color: var(--olive);
+    margin: 0;
+  }
+  .date {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.7;
+    margin: -0.5rem 0 0;
+  }
+  .subtitle {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  .intro {
+    margin: 0;
+    max-width: 24rem;
+    line-height: 1.6;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  /* The player sits in its own 16:9 frame so the Drive iframe can never overflow
+     the page on narrow screens. The wrapper is also the fullscreen target. */
+  .player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+  .player iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  /* In fullscreen the rounded corners and 16:9 box would letterbox oddly, so drop
+     both and let the iframe fill the screen. */
+  .player:fullscreen, .player:-webkit-full-screen {
+    aspect-ratio: auto;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 15rem;
+    color: var(--ink);
+    opacity: 0.4;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.95rem 2rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: #fff;
+    background: var(--olive);
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(78, 79, 39, 0.3);
+    transition: background 0.15s ease;
+  }
+  .btn:active, .btn:hover { background: var(--olive-dark); }
+  .btn--ghost {
+    color: var(--olive);
+    background: transparent;
+    border: 1px solid rgba(78, 79, 39, 0.35);
+    box-shadow: none;
+  }
+  .btn--ghost:active, .btn--ghost:hover {
+    color: #fff;
+    background: var(--olive);
+  }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <h1 class="names">Laura &amp; Viktor</h1>
+    <p class="date">2026.07.18</p>
+    <h2 class="subtitle">Esküvői videó</h2>
+    <p class="intro">Dőlj hátra, és nézd meg a nagy napunk filmjét!</p>
+
+    <div class="player" id="player">
+      <iframe
+        src="https://drive.google.com/file/d/1OEEM0LZ3eR6oFNaQ1ezKO1ammvsWKoY-/preview"
+        title="Laura &amp; Viktor — esküvői film"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn--ghost" id="fullscreen" type="button" hidden>Teljes képernyő</button>
+    </div>
+
+    <div class="divider">vagy</div>
+
+    <a class="btn" id="open" href="https://drive.google.com/file/d/1OEEM0LZ3eR6oFNaQ1ezKO1ammvsWKoY-/view">Megnyitás a Drive-ban</a>
+  </main>
+
+  <script>
+    (function () {
+      var fileId = "1OEEM0LZ3eR6oFNaQ1ezKO1ammvsWKoY-";
+      var webUrl = "https://drive.google.com/file/d/" + fileId + "/view";
+
+      // The Drive player has its own fullscreen control; this button is a bigger,
+      // more obvious target for the same thing. Only show it where the Fullscreen
+      // API actually works on a plain element — iPhone Safari allows it for <video>
+      // only, so the button would silently do nothing there.
+      var player = document.getElementById("player");
+      var fsBtn = document.getElementById("fullscreen");
+      var request = player.requestFullscreen || player.webkitRequestFullscreen;
+      var enabled = document.fullscreenEnabled || document.webkitFullscreenEnabled;
+
+      if (request && enabled) {
+        fsBtn.hidden = false;
+        fsBtn.addEventListener("click", function () {
+          var active = document.fullscreenElement || document.webkitFullscreenElement;
+          if (active) {
+            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          } else {
+            request.call(player);
+          }
+        });
+
+        ["fullscreenchange", "webkitfullscreenchange"].forEach(function (evt) {
+          document.addEventListener(evt, function () {
+            var active = document.fullscreenElement || document.webkitFullscreenElement;
+            fsBtn.textContent = active ? "Kilépés a teljes képernyőből" : "Teljes képernyő";
+          });
+        });
+      }
+
+      // On Android, upgrade the fallback link to an intent:// URL so it opens the
+      // Google Drive app (with browser_fallback_url if the app isn't installed).
+      // iOS/desktop keep the plain web link. Mirrors the vendégfotók page.
+      if (/Android/i.test(navigator.userAgent)) {
+        document.getElementById("open").href =
+          "intent://drive.google.com/file/d/" + fileId + "/view" +
+          "#Intent;scheme=https;package=com.google.android.apps.docs;" +
+          "S.browser_fallback_url=" + encodeURIComponent(webUrl) + ";end";
+      }
+    })();
+  </script>
+</body>
+</html>
