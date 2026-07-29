@@ -66,12 +66,16 @@
     color: var(--ink);
     opacity: 0.85;
   }
-  /* The player sits in its own 16:9 frame so the Drive iframe can never overflow
-     the page on narrow screens. The wrapper is also the fullscreen target. */
+  /* The Drive player stacks its own toolbar ABOVE the video inside the iframe,
+     so a plain 16:9 box pushes the video down and clips its bottom edge on
+     narrow screens. Reserve 16:9 for the video plus a fixed allowance for that
+     chrome. padding-bottom is a % of the element's own width, so this tracks
+     any container width. The wrapper is also the fullscreen target. */
   .player {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: 0;
+    padding-bottom: calc(56.25% + 3.5rem);
     background: #000;
     border-radius: 18px;
     overflow: hidden;
@@ -84,12 +88,12 @@
     height: 100%;
     border: 0;
   }
-  /* In fullscreen the rounded corners and 16:9 box would letterbox oddly, so drop
-     both and let the iframe fill the screen. */
+  /* In fullscreen the rounded corners and the reserved chrome height would
+     letterbox oddly, so drop both and let the iframe fill the screen. */
   .player:fullscreen, .player:-webkit-full-screen {
-    aspect-ratio: auto;
     width: 100vw;
     height: 100vh;
+    padding-bottom: 0;
     border-radius: 0;
     box-shadow: none;
   }
@@ -146,6 +150,21 @@
     background: var(--olive);
   }
   [hidden] { display: none !important; }
+
+  @media (max-width: 560px) {
+    .card { gap: 1.25rem; }
+    .names { font-size: 2.1rem; }
+    .subtitle { font-size: 1.45rem; }
+    .intro { font-size: 0.98rem; }
+    /* Let the player run edge to edge: on a phone the body's side padding is a
+       meaningful share of the video's width. The :fullscreen rule above still
+       wins over this one on specificity. */
+    .player {
+      width: calc(100% + 3rem);
+      margin: 0 -1.5rem;
+      border-radius: 0;
+    }
+  }
 </style>
 </head>
 <body>
