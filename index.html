@@ -78,18 +78,28 @@
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: calc(56.25% + 5rem);
+    padding-bottom: calc(56.25% + 2.5rem);
     background: #000;
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
+  /* Render the iframe at twice the frame size and scale it back down. Drive's
+     player chrome is sized in fixed pixels, so in a 2x-wider layout viewport it
+     takes up a smaller FRACTION of the frame; after the 0.5 scale it reads as
+     normal-sized controls instead of the oversized mobile cluster, and the video
+     gets a correspondingly larger share of the box. Stays sharp because the
+     iframe genuinely renders at 2x. Note: top/left rather than inset, since
+     inset would also pin right/bottom and fight the 200% dimensions. */
   .player iframe {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
     border: 0;
+    transform: scale(0.5);
+    transform-origin: top left;
   }
   /* In fullscreen the rounded corners and the reserved chrome height would
      letterbox oddly, so drop both and let the iframe fill the screen. */
@@ -99,6 +109,13 @@
     padding-bottom: 0;
     border-radius: 0;
     box-shadow: none;
+  }
+  /* Fullscreen is roomy enough for Drive's own layout, so drop the 2x trick
+     there and let the iframe fill the screen at native scale. */
+  .player:fullscreen iframe, .player:-webkit-full-screen iframe {
+    width: 100%;
+    height: 100%;
+    transform: none;
   }
   .actions {
     display: flex;
